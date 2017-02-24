@@ -1,5 +1,6 @@
 package com.maoheni.mao.zhbj;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
@@ -8,6 +9,8 @@ import android.view.animation.AnimationSet;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
+import com.maoheni.mao.zhbj.util.PreferenceUtil;
+
 
 public class SplashActivity extends AppCompatActivity {
     private RelativeLayout sp;
@@ -64,9 +67,9 @@ public class SplashActivity extends AppCompatActivity {
     private void jumpToNextPage(){
         boolean userGuide = PreferenceUtil.getBoolean(this,"user_guide",false);
         if(!userGuide){
-            startActivity(SplashActivity.this,UserGuideActivity.class);
+            startActivity(new Intent(SplashActivity.this,UserGuideActivity.class));
         }else{
-            startActivity(SplashActivity.this,MainActivity.class);
+            startActivity(new Intent(SplashActivity.this,MainActivity.class));
         }
     }
 }
