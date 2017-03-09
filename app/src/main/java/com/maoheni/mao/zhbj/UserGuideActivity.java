@@ -8,9 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.maoheni.mao.zhbj.util.PreferenceUtil;
 
@@ -24,14 +26,18 @@ public class UserGuideActivity extends AppCompatActivity {
     private Button btnStart;
     private ArrayList<ImageView> mImageViewList;
     private int mPointWidth;// 圆点间的距离
+    private View viewRedPoint;// 小红点
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_user_guide);
         vpGuide = (ViewPager)findViewById(R.id.vp_guide);
         llPointGroup =(LinearLayout) findViewById(R.id.ll_point_group);
+        viewRedPoint = findViewById(R.id.view_red_point);
         btnStart = (Button) findViewById(R.id.btn_start);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +50,7 @@ public class UserGuideActivity extends AppCompatActivity {
 
         initViews();
         vpGuide.setAdapter(new GuideAdapter());
+        vpGuide.addOnPageChangeListener(new GuidePagerListener());
         //vpGuide.setAdapter(new GuideAdapter());
     }
 
@@ -109,6 +116,35 @@ public class UserGuideActivity extends AppCompatActivity {
         @Override
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
+        }
+    }
+
+    class GuidePagerListener implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            // System.out.println("当前位置:" + position + ";百分比:" + positionOffset
+            // + ";移动距离:" + positionOffsetPixels);
+            int len = (int) (mPointWidth * positionOffset) + position
+                    * mPointWidth;
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewRedPoint
+                    .getLayoutParams();// 获取当前红点的布局参数
+            params.leftMargin = len;// 设置左边距
+
+            viewRedPoint.setLayoutParams(params);// 重新给小红点设置布局参数
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (position == mImageIds.length - 1) {// 最后一个页面
+                btnStart.setVisibility(View.VISIBLE);// 显示开始体验的按钮
+            } else {
+                btnStart.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 }

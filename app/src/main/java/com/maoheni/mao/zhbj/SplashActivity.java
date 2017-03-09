@@ -1,8 +1,12 @@
 package com.maoheni.mao.zhbj;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -13,11 +17,15 @@ import com.maoheni.mao.zhbj.util.PreferenceUtil;
 
 
 public class SplashActivity extends AppCompatActivity {
+    public static final String TAG = "SplashActivity";
     private RelativeLayout sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+
         sp = (RelativeLayout) findViewById(R.id.activity_splash);
         startAnimation();
     }
@@ -52,7 +60,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
+                jumpToNextPage();
             }
 
             @Override
@@ -66,6 +74,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void jumpToNextPage(){
         boolean userGuide = PreferenceUtil.getBoolean(this,"user_guide",false);
+        Log.d(TAG, String.valueOf(userGuide));
         if(!userGuide){
             startActivity(new Intent(SplashActivity.this,UserGuideActivity.class));
         }else{
